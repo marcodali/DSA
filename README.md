@@ -19,6 +19,7 @@ Cada algoritmo está implementado en los siguientes lenguajes:
 3. **Python 3**
 4. **JavaScript**
 5. **Ruby**
+6. **C#**
 
 ## Plataformas en la Nube
 

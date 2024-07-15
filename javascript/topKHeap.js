@@ -3,51 +3,32 @@ class Heap {
     this.heap = [];
   }
 
-  push(value) {
-    this.heap.push(value);
-    this.bubbleUp();
-  }
-
-  // bubbleUp iterative version
-  bubbleUp() {
-    let index = this.heap.length - 1;
-    while (index > 0) {
-      const element = this.heap[index],
-        parentIndex = Math.floor((index - 1) / 2),
-        parent = this.heap[parentIndex];
-      if (parent >= element) break;
-      this.heap[index] = parent;
-      this.heap[parentIndex] = element;
-      index = parentIndex;
+  push(val) {
+    this.heap.push(val);
+    let idx = this.heap.length - 1, pIdx;
+    while (idx > 0 && this.heap[idx] > this.heap[pIdx = Math.floor((idx - 1) / 2)]) {
+      [this.heap[idx], this.heap[pIdx]] = [this.heap[pIdx], this.heap[idx]];
+      idx = pIdx;
     }
   }
 
   pop() {
-    const max = this.heap[0];
-    const end = this.heap.pop();
-    if (this.heap.length > 0) {
+    const max = this.heap[0], end = this.heap.pop();
+    if (this.heap.length) {
       this.heap[0] = end;
       this.sinkDown(0);
     }
     return max;
   }
 
-  // sinkDown recursive version
-  sinkDown(index) {
-    let left = 2 * index + 1,
-      right = 2 * index + 2,
-      largest = index;
-
+  sinkDown(idx) {
     const length = this.heap.length;
+    let largest = idx, left = 2 * idx + 1, right = 2 * idx + 2;
 
-    if (left <= length && this.heap[left] > this.heap[largest]) {
-      largest = left;
-    }
-    if (right <= length && this.heap[right] > this.heap[largest]) {
-      largest = right;
-    }
-    if (largest !== index) {
-      [this.heap[largest], this.heap[index]] = [this.heap[index], this.heap[largest]];
+    if (left < length && this.heap[left] > this.heap[largest]) largest = left;
+    if (right < length && this.heap[right] > this.heap[largest]) largest = right;
+    if (largest !== idx) {
+      [this.heap[idx], this.heap[largest]] = [this.heap[largest], this.heap[idx]];
       this.sinkDown(largest);
     }
   }
@@ -55,7 +36,7 @@ class Heap {
 
 // Example usage:
 const myArray = [1, 0, -3, -6, -5, 4, -10, 500, -1];
-const k = 6;
+const k = 8;
 
 // find kth smallest element approach with fixed size heap
 const minHeap = new Heap();
@@ -76,3 +57,23 @@ for (const num of myArray) {
   }
 }
 console.log(`k=${k}th greatest element is ${-maxHeap.heap[0]}`);
+
+// find kth greatest element approach with k-1 calls to pop
+const h = new Heap();
+for (const num of myArray) {
+  h.push(num);
+}
+for (let i = 0; i < k - 1; i++) {
+  h.pop();
+}
+console.log(`k=${k}th greatest element is ${h.pop()}`);
+
+// find kth smallest element approach with k-1 calls to pop
+const mHeap = new Heap();
+for (const num of myArray) {
+  mHeap.push(-num);
+}
+for (let i = 0; i < k - 1; i++) {
+  mHeap.pop();
+}
+console.log(`k=${k}th smallest element is ${-mHeap.pop()}`);
