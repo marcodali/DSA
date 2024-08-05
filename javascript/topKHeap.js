@@ -1,8 +1,5 @@
 class Heap {
-  constructor() {
-    this.heap = [];
-  }
-
+  constructor() { this.heap = [] }
   push(val) {
     this.heap.push(val);
     let idx = this.heap.length - 1, pIdx;
@@ -11,7 +8,6 @@ class Heap {
       idx = pIdx;
     }
   }
-
   pop() {
     const max = this.heap[0], end = this.heap.pop();
     if (this.heap.length) {
@@ -20,11 +16,9 @@ class Heap {
     }
     return max;
   }
-
   sinkDown(idx) {
     const length = this.heap.length;
     let largest = idx, left = 2 * idx + 1, right = 2 * idx + 2;
-
     if (left < length && this.heap[left] > this.heap[largest]) largest = left;
     if (right < length && this.heap[right] > this.heap[largest]) largest = right;
     if (largest !== idx) {

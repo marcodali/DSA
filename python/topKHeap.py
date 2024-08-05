@@ -53,7 +53,7 @@ if __name__ == '__main__':
   nums = [12, 3, -2, 6, 4, 8, 9, 10, 14, 1]
   #normal(nums, 3)
   
-  # bidimensional list with 5 elements each row
+  # bidimensional list
   matrix = [
     [12, 3, -2, 6, 4],
     [8, 9, -10, 14, 1],
