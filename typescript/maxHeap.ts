@@ -23,7 +23,7 @@ class MaxHeap {
 	private h: number[] = [];
 
 	swap(x: number, y: number): void {
-		[this.h[x], this.h[y]] = [this.h[y], this.h[x]]
+		[this.h[x], this.h[y]] = [this.h[y], this.h[x]];
 	}
 
 	push(v: number): void {
@@ -37,6 +37,20 @@ class MaxHeap {
 			this.swap(i, p);
 			i = p;
 		}
+	}
+
+	pop(): number | undefined {
+		if (this.h.length > 1) {
+			const max = this.h[0];
+			this.h[0] = this.h.pop() as number;
+			this.sinkDown(0);
+			return max;
+		}
+		return this.h.pop();
+	}
+
+	sinkDown(i: number): void {
+		// pending implementation
 	}
 }
 
