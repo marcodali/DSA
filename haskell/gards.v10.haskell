@@ -1,7 +1,0 @@
-imc :: Double -> Double -> String
-imc peso altura
-  | indice < 18.5 = "Bajo peso"
-  | indice < 25.0 = "Peso normal"
-  | indice < 30.0 = "Sobrepeso"
-  | otherwise     = "Obesidad"
-  where indice = peso / (altura ^ 2)
