@@ -1,5 +1,4 @@
-//import Express from 'express'
-const Express = require('express')
+import Express from 'express'
 
 const app = Express()
 
@@ -23,8 +22,10 @@ app.put("/comida", (req, res) => {
     return res.status(204).send()
 })
 
-const server = app.listen(() => {
-    console.log(`listening on ${server.address().port}`)
+app.all("/comida", (_, res) => {
+    res.status(405).send()
 })
 
-module.exports = { app, server }
+export const server = app.listen(() => {
+    console.log(`listening on ${server.address().port}`)
+})
