@@ -1,5 +1,7 @@
 .DS_Store
+.coverage
 package-lock.json
 
+__pycache__
 node_modules/
 coverage/
