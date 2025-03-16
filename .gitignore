@@ -1,5 +1,7 @@
 .DS_Store
 .coverage
+go.sum
+coverage.out
 package-lock.json
 
 __pycache__

@@ -7,10 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func main() {
-	server := echo.New()
+var Server *echo.Echo
 
-	server.POST("/cars/:toyota", func(ctx echo.Context) error {
+func setupServer() *echo.Echo {
+	Server = echo.New()
+	Server.POST("/cars/:toyota", func(ctx echo.Context) error {
 		var carSlice []string
 
 		toyota := ctx.Param("toyota")
@@ -26,6 +27,10 @@ func main() {
 		}
 		return ctx.JSON(200, response)
 	})
+	return Server
+}
 
+func main() {
+	server := setupServer()
 	server.Start(":7676")
 }
