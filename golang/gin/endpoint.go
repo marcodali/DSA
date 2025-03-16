@@ -11,7 +11,9 @@ type BodyPayload struct {
 	Novias int `json:"novias"`
 }
 
-func main() {
+var Server *gin.Engine
+
+func setupServer() *gin.Engine {
 	server := gin.Default()
 
 	server.PATCH("/marriage/:esposas", func(context *gin.Context) {
@@ -30,5 +32,10 @@ func main() {
 		context.JSON(206, response)
 	})
 
-	server.Run(":7070")
+	return server
+}
+
+func main() {
+	Server = setupServer()
+	Server.Run(":7070")
 }
