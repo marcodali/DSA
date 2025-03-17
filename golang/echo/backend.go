@@ -10,8 +10,8 @@ import (
 var Server *echo.Echo
 
 func setupServer() *echo.Echo {
-	Server = echo.New()
-	Server.POST("/cars/:toyota", func(ctx echo.Context) error {
+	server := echo.New()
+	server.POST("/cars/:toyota", func(ctx echo.Context) error {
 		var carSlice []string
 
 		toyota := ctx.Param("toyota")
@@ -27,10 +27,10 @@ func setupServer() *echo.Echo {
 		}
 		return ctx.JSON(200, response)
 	})
-	return Server
+	return server
 }
 
 func main() {
-	server := setupServer()
-	server.Start(":7676")
+	Server = setupServer()
+	Server.Start(":7676")
 }
