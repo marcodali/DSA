@@ -22,7 +22,7 @@ func setupServer() *echo.Echo {
 		carSlice = append(carSlice, honda)
 		carSlice = append(carSlice, byd)
 
-		response := map[string]string{
+		response := echo.Map{
 			"winner": fmt.Sprintf("comprate un %s es la mejor opcion", carSlice[rand.IntN(3)]),
 		}
 		return ctx.JSON(200, response)
