@@ -27,7 +27,7 @@ func TestPatch(t *testing.T) {
 
 	server.ServeHTTP(recorder, request)
 
-	assert.Equal(t, http.StatusPartialContent, recorder.Code, "success code")
+	assert.Equal(t, http.StatusPartialContent, recorder.Code)
 	assert.Contains(t, recorder.Body.String(), total, "the total sum should be present in the server answer")
 }
 

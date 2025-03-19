@@ -29,8 +29,8 @@ func TestPostRequest(t *testing.T) {
 	fmt.Sscanf(response["winner"], "%s %s %s", &one, &two, &thirdWord)
 
 	assert.NoError(t, err)
-	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))
 	assert.Equal(t, http.StatusOK, recorder.Code)
+	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))
 	assert.Contains(t, options, thirdWord, "one of the options should be in the response")
 }
 
@@ -43,14 +43,14 @@ func TestPatchMalformedRequest(t *testing.T) {
 	badRequest.Header.Set("Content-Type", "application/json")
 	server.ServeHTTP(badRecorder, badRequest)
 
-	assert.Contains(t, badRecorder.Header().Get("Content-Type"), "text/plain")
 	assert.Equal(t, http.StatusUnprocessableEntity, badRecorder.Code)
+	assert.Contains(t, badRecorder.Header().Get("Content-Type"), "text/plain")
 	assert.Equal(t, "cannot decode json", badRecorder.Body.String())
 }
 
 func TestPatchRequest(t *testing.T) {
-	recorder := httptest.NewRecorder()
 	server := setupServer()
+	recorder := httptest.NewRecorder()
 	j1 := map[string]string{"model": "lambo"}
 	j2, _ := json.Marshal(j1)
 	body := strings.NewReader(string(j2))
@@ -59,7 +59,7 @@ func TestPatchRequest(t *testing.T) {
 	request.Header.Set("Content-Type", "application/json")
 	server.ServeHTTP(recorder, request)
 
-	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))
 	assert.Equal(t, http.StatusResetContent, recorder.Code)
+	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))
 	assert.Contains(t, recorder.Body.String(), "susuki")
 }
