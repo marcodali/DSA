@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -10,17 +11,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGoodEndpoint(t *testing.T) {
+func TestPatch(t *testing.T) {
 	esposas := 3
 	amantes := 4
 	novias := 5
 	total := "12" // esposas + amantes + novias
 	server := setupServer()
 	recorder := httptest.NewRecorder()
+	noviasJson := map[string]int{"novias": novias}
 
+	body, _ := json.Marshal(noviasJson)
 	url := fmt.Sprintf("/marriage/%d?amantes=%d", esposas, amantes)
-	body := fmt.Sprintf("{\"novias\": %d}", novias)
-	request := httptest.NewRequest(http.MethodPatch, url, strings.NewReader(body))
+	request := httptest.NewRequest(http.MethodPatch, url, strings.NewReader(string(body)))
 	request.Header.Set("Content-Type", "application/json")
 
 	server.ServeHTTP(recorder, request)
@@ -29,13 +31,28 @@ func TestGoodEndpoint(t *testing.T) {
 	assert.Contains(t, recorder.Body.String(), total, "the total sum should be present in the server answer")
 }
 
-func TestBadEndpoint(t *testing.T) {
+func TestMalformedPatch(t *testing.T) {
 	server := setupServer()
 	recorder := httptest.NewRecorder()
-	url := fmt.Sprintf("/marriage/%d?amantes=%d", 1, 2)
-	request := httptest.NewRequest(http.MethodGet, url, nil)
 
+	request := httptest.NewRequest(http.MethodPatch, "/marriage/1?amantes=2", strings.NewReader("novias=3"))
+	request.Header.Set("Content-Type", "application/json")
 	server.ServeHTTP(recorder, request)
 
-	assert.Equal(t, http.StatusNotFound, recorder.Code, "because this method was not implemented")
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	assert.Contains(t, recorder.Header().Get("Content-Type"), "text/plain")
+	assert.Contains(t, strings.ToLower(recorder.Body.String()), "no pude parsear el body")
+}
+
+func TestPut(t *testing.T) {
+	server := setupServer()
+	recorder := httptest.NewRecorder()
+
+	request := httptest.NewRequest(http.MethodPut, "/marriage/", strings.NewReader("pretendientas=20"))
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	server.ServeHTTP(recorder, request)
+
+	assert.Equal(t, http.StatusMultiStatus, recorder.Code)
+	assert.Contains(t, recorder.Header().Get("Content-Type"), "text/html")
+	assert.Contains(t, recorder.Body.String(), "15") // 15 es el 75% de 20
 }

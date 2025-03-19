@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand/v2"
 	"net/http"
@@ -11,17 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func ContainSomeOption(t *testing.T, options []string, haystack string) bool {
-	for _, option := range options {
-		if strings.Contains(haystack, option) {
-			t.Logf("winner option: %s, haystack: %s", option, haystack)
-			return true
-		}
-	}
-	return false
-}
-
-func TestServer(t *testing.T) {
+func TestPostRequest(t *testing.T) {
 	options := []string{"camaro", "shellby", "chevy"}
 	recorder := httptest.NewRecorder()
 	server := setupServer()
@@ -32,7 +23,43 @@ func TestServer(t *testing.T) {
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	server.ServeHTTP(recorder, request)
+	var response map[string]string
+	var one, two, thirdWord string
+	err := json.Unmarshal(recorder.Body.Bytes(), &response)
+	fmt.Sscanf(response["winner"], "%s %s %s", &one, &two, &thirdWord)
 
+	assert.NoError(t, err)
+	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))
 	assert.Equal(t, http.StatusOK, recorder.Code)
-	assert.True(t, ContainSomeOption(t, options, recorder.Body.String()), "one of the sample cars should appear in the response")
+	assert.Contains(t, options, thirdWord, "one of the options should be in the response")
+}
+
+func TestPatchMalformedRequest(t *testing.T) {
+	badRecorder := httptest.NewRecorder()
+	server := setupServer()
+	malformedBody := strings.NewReader("model=lambo")
+
+	badRequest := httptest.NewRequest(http.MethodPatch, "/cars", malformedBody)
+	badRequest.Header.Set("Content-Type", "application/json")
+	server.ServeHTTP(badRecorder, badRequest)
+
+	assert.Contains(t, badRecorder.Header().Get("Content-Type"), "text/plain")
+	assert.Equal(t, http.StatusUnprocessableEntity, badRecorder.Code)
+	assert.Equal(t, "cannot decode json", badRecorder.Body.String())
+}
+
+func TestPatchRequest(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	server := setupServer()
+	j1 := map[string]string{"model": "lambo"}
+	j2, _ := json.Marshal(j1)
+	body := strings.NewReader(string(j2))
+
+	request := httptest.NewRequest(http.MethodPatch, "/cars", body)
+	request.Header.Set("Content-Type", "application/json")
+	server.ServeHTTP(recorder, request)
+
+	assert.Equal(t, "application/json", recorder.Header().Get("Content-Type"))
+	assert.Equal(t, http.StatusResetContent, recorder.Code)
+	assert.Contains(t, recorder.Body.String(), "susuki")
 }

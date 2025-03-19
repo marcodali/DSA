@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +24,7 @@ func setupServer() *gin.Engine {
 
 		var payload BodyPayload
 		if err := ctx.BindJSON(&payload); err != nil {
-			ctx.String(400, "No pude parsear el body %v", err)
+			ctx.String(http.StatusBadRequest, "No pude parsear el body %v", err)
 			return
 		}
 
@@ -32,6 +34,15 @@ func setupServer() *gin.Engine {
 		ctx.JSON(206, response)
 	})
 
+	server.PUT("/marriage/", func(ctx *gin.Context) {
+		quedantes, _ := strconv.ParseInt(ctx.PostForm("pretendientas"), 10, 64)
+		ctx.HTML(http.StatusMultiStatus, "hola.tmpl", gin.H{
+			"quedantes":          quedantes,
+			"quedantesAjustados": int64(math.Floor(float64(quedantes) * 0.75)),
+		})
+	})
+
+	server.LoadHTMLGlob("plantillas/*")
 	return server
 }
 
