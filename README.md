@@ -9,6 +9,16 @@ Running unit testing with coverage
 npx vitest run --coverage
 ```
 
+New react project with next
+```bash
+npx create-next-app@latest
+```
+
+New react project with vite
+```bash
+npm create vite@latest nueva-belleza -- --template react
+```
+
 ## Python
 
 Running unit testing with coverage
