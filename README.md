@@ -2,6 +2,13 @@
 
 This project showcases homemade web server endpoints built in multiple backend languages and frameworks. It includes debugging, unit testing, dependency management, Dockerization, deployment, and database integration.
 
+## Javascript
+
+Running unit testing with coverage
+```bash
+npx vitest run --coverage
+```
+
 ## Python
 
 Running unit testing with coverage
