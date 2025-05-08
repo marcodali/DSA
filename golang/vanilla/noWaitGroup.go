@@ -7,7 +7,7 @@ import (
 
 const N = 10
 
-func main() {
+func main2() {
 	var even_numbers []int
 	var odd_numbers []int
 	var random_numbers [N]int
