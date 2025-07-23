@@ -16,7 +16,7 @@ function generatePrimesUpTo(num: number) {
     }
 }
 
-app.get("/dog", async (req: Request, res: Response) => {
+app.get("/dog", (req: Request, res: Response) => {
     const goal = Number(req.query.goal)
     const init_time = performance.now()
     generatePrimesUpTo(goal)
@@ -27,7 +27,7 @@ app.get("/dog", async (req: Request, res: Response) => {
     })
 })
 
-const server = app.listen(0 || PORT, () => {
+const server = app.listen(PORT, () => {
     const address = server.address()
     if (address && typeof address == 'object') {
         console.log("Listening at port", address.port)

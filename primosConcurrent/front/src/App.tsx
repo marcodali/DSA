@@ -58,6 +58,7 @@ function App() {
         try {
             setError(null)
             setIsLoading(true)
+            setIsReadyRunButton(false)
 
             const respuesta = await fetch(url, {
                 method: 'POST',
@@ -79,6 +80,7 @@ function App() {
             setError(err instanceof Error ? err.message : 'Bad behavior')
         } finally {
             setIsLoading(false)
+            setIsReadyRunButton(true)
         }
     }
 
@@ -96,7 +98,7 @@ function App() {
                 type='button'
                 disabled={!isReadyRunButton}
                 value="Run"
-                onClick={handleRun}/>
+                onClick={handleRun} />
             <br /><br />
             <table>
                 <thead>
