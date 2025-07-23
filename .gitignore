@@ -2,5 +2,5 @@
 **/package-lock.json
 **/node_modules/
 **/venv/
-package.json
-tsconfig.json
+/package.json
+/tsconfig.json
